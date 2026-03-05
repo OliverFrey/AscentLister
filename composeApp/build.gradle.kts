@@ -41,6 +41,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.ktor.client.okhttp)
+            implementation(compose.components.resources)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
