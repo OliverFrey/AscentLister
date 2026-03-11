@@ -11,23 +11,26 @@ class RouteListViewModel: ViewModel() {
     val state = _state.asStateFlow()
 
     fun onAction(action: RouteListAction){
-        when(action){
-            is RouteListAction.OnRouteClicked -> {
+            when (action) {
+                is RouteListAction.OnRouteClicked -> {
 
-            }
-            is RouteListAction.OnSearchQueryChange -> {
-               _state.update {
-                   it.copy(searchQuery = action.query)
-               }
-            }
-            is RouteListAction.OnTabSelected -> {
-                _state.update {
-                    it.copy(selectedTabIndex = action.index)
+                }
+
+                is RouteListAction.OnSearchQueryChange -> {
+                    _state.update {
+                        it.copy(searchQuery = action.query)
+                    }
+                }
+
+                is RouteListAction.OnTabSelected -> {
+                    _state.update {
+                        it.copy(selectedTabIndex = action.index)
+                    }
+                }
+
+                is RouteListAction.OnAddButtonClicked -> {
+
                 }
             }
-            is RouteListAction.OnAddButtonClicked -> {
-
-            }
-        }
     }
 }
