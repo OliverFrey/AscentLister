@@ -2,6 +2,7 @@ package com.example.ascentlister.ascent.presentation.add_ascent
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,9 @@ import ascentlister.composeapp.generated.resources.arrow_down_24px
 import com.example.ascentlister.core.presentation.DarkBlue
 import com.example.ascentlister.core.presentation.DesertWhite
 import com.example.ascentlister.core.presentation.SandYellow
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -53,6 +57,34 @@ fun AddAscentScreen(
     state: AddAscentState,
     onAction: (AddAscentAction) -> Unit
 ) {
+    var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = state.date
+    )
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let {
+                        onAction(AddAscentAction.OnDateChange(it))
+                    }
+                    showDatePicker = false
+                }) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Cancel")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -156,6 +188,32 @@ fun AddAscentScreen(
 
                     HorizontalDivider()
 
+                    // Date Selection
+                    val formattedDate = remember(state.date) {
+                        Instant.fromEpochMilliseconds(state.date)
+                            .toLocalDateTime(TimeZone.UTC)
+                            .date
+                            .toString()
+                    }
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        OutlinedTextField(
+                            value = formattedDate,
+                            onValueChange = {},
+                            readOnly = true,
+                            label = { Text("Date") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = { showDatePicker = true }
+                                )
+                        )
+                    }
+
                     // Style Dropdown
                     var expanded by remember { mutableStateOf(false) }
                     Box {
@@ -173,6 +231,15 @@ fun AddAscentScreen(
                                     )
                                 }
                             }
+                        )
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = { expanded = true }
+                                )
                         )
                         DropdownMenu(
                             expanded = expanded,
