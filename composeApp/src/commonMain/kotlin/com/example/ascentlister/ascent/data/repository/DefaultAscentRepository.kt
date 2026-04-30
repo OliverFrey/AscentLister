@@ -7,13 +7,30 @@ import com.example.ascentlister.core.domain.Result
 import com.example.ascentlister.core.domain.map
 import com.example.ascentlister.ascent.data.mappers.toAscent
 import com.example.ascentlister.ascent.domain.AscentRepository
+import com.example.ascentlister.ascent.data.local.AscentDao
+import com.example.ascentlister.route.domain.Route
+import kotlinx.coroutines.flow.Flow
 
 class DefaultAscentRepository(
-    private val remoteAscentDataSource: RemoteAscentDataSource
+    private val remoteAscentDataSource: RemoteAscentDataSource,
+    private val ascentDao: AscentDao
 ): AscentRepository {
     override suspend fun getAscents(query: String) : Result<List<Ascent>, DataError.Remote>{
         return remoteAscentDataSource
             .getAscents(query)
             .map { dtoList -> dtoList.map { it.toAscent() } }
+    }
+
+    override suspend fun syncRoutes(query: String): Result<Unit, DataError.Remote> {
+        return remoteAscentDataSource
+            .getAscents(query)
+            .map { dtoList ->
+                val routes = dtoList.map { it.toAscent().route }
+                ascentDao.upsertRoutes(routes)
+            }
+    }
+
+    override fun getLocalRoutes(): Flow<List<Route>> {
+        return ascentDao.getRoutes()
     }
 }

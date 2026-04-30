@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 data class AscentDto (
     val ascentId: Int,
     val route: RouteDto?,
-    val date: GMTDate,
+    val date: Long,
     val style: String,
     val attempts: Int,
     val comments: String

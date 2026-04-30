@@ -1,3 +1,5 @@
+package com.example.ascentlister.route.presentation.route_list
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,13 +15,19 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,18 +40,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ascentlister.composeapp.generated.resources.Res
 import ascentlister.composeapp.generated.resources.no_search_results
+import ascentlister.composeapp.generated.resources.refresh_24px
 import ascentlister.composeapp.generated.resources.route_list
+import ascentlister.composeapp.generated.resources.search_24px
 import ascentlister.composeapp.generated.resources.statistics
 import com.example.ascentlister.location.domain.Location
 import com.example.ascentlister.route.domain.Route
-import com.example.ascentlister.route.presentation.route_list.RouteListAction
-import com.example.ascentlister.route.presentation.route_list.RouteListState
-import com.example.ascentlister.route.presentation.route_list.RouteListViewModel
 import com.example.ascentlister.route.presentation.route_list.components.RouteList
 import com.example.ascentlister.route.presentation.route_list.components.RouteSearchBar
 import com.example.ascentlister.core.presentation.DarkBlue
 import com.example.ascentlister.core.presentation.DesertWhite
 import com.example.ascentlister.core.presentation.SandYellow
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -67,6 +75,7 @@ fun RouteListScreenRoot(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RouteListScreen(
     state: RouteListState,
@@ -78,152 +87,174 @@ fun RouteListScreen(
     val routeListState = rememberLazyListState()
 
     LaunchedEffect(state.searchResults) {
-        routeListState.animateScrollToItem(0)
-    }
-
-    LaunchedEffect(state.selectedTabIndex) {
-        pagerState.animateScrollToPage(state.selectedTabIndex)
+        if(state.searchResults.isNotEmpty()) {
+             routeListState.animateScrollToItem(0)
+        }
     }
 
     LaunchedEffect(pagerState.currentPage) {
-        onAction(RouteListAction.OnTabSelected(pagerState.currentPage))
+        if (state.selectedTabIndex != pagerState.currentPage) {
+            onAction(RouteListAction.OnTabSelected(pagerState.currentPage))
+        }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(DarkBlue)
-            .statusBarsPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        RouteSearchBar(
-            searchQuery = state.searchQuery,
-            onSearchQueryChange = {
-                onAction(RouteListAction.OnSearchQueryChange(it))
-            },
-            onImeSearch = {
-                keyboardController?.hide()
-            },
-            modifier = Modifier
-                .widthIn(max = 400.dp)
-                .fillMaxWidth()
-                .padding(16.dp)
-        )
-        Surface(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            color = DesertWhite,
-            shape = RoundedCornerShape(
-                topStart = 32.dp,
-                topEnd = 32.dp
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Ascent Lister") },
+                actions = {
+                    IconButton(onClick = { onAction(RouteListAction.OnSyncClicked) }) {
+                        Icon(
+                            painter = painterResource(Res.drawable.refresh_24px),
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.66f)
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = DarkBlue,
+                    titleContentColor = DesertWhite,
+                    actionIconContentColor = DesertWhite
+                )
             )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(DarkBlue)
+                .padding(padding),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+            RouteSearchBar(
+                searchQuery = state.searchQuery,
+                onSearchQueryChange = {
+                    onAction(RouteListAction.OnSearchQueryChange(it))
+                },
+                onImeSearch = {
+                    keyboardController?.hide()
+                },
+                modifier = Modifier
+                    .widthIn(max = 400.dp)
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+            Surface(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                color = DesertWhite,
+                shape = RoundedCornerShape(
+                    topStart = 32.dp,
+                    topEnd = 32.dp
+                )
             ) {
-                PrimaryTabRow(
-                    selectedTabIndex = state.selectedTabIndex,
-                    modifier = Modifier
-                        .padding(vertical = 12.dp)
-                        .widthIn(max = 700.dp)
-                        .fillMaxWidth(),
-                    containerColor = DesertWhite,
-                    indicator = {
-                        TabRowDefaults.SecondaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(state.selectedTabIndex),
-                            color = SandYellow
-                        )
-                    }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Tab(
-                        selected = state.selectedTabIndex == 0,
-                        onClick = {
-                            onAction(RouteListAction.OnTabSelected(0))
-                        },
-                        modifier = Modifier.weight(1f),
-                        selectedContentColor = SandYellow,
-                        unselectedContentColor = Color.Black.copy(alpha = 0.5f)
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.route_list),
-                            modifier = Modifier
-                                .padding(vertical = 12.dp)
-                        )
-                    }
-                    Tab(
-                        selected = state.selectedTabIndex == 1,
-                        onClick = {
-                            onAction(RouteListAction.OnTabSelected(1))
-                        },
-                        modifier = Modifier.weight(1f),
-                        selectedContentColor = SandYellow,
-                        unselectedContentColor = Color.Black.copy(alpha = 0.5f)
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.statistics),
-                            modifier = Modifier
-                                .padding(vertical = 12.dp)
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(4.dp))
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                ) { pageIndex ->
-                    Box(
+                    PrimaryTabRow(
+                        selectedTabIndex = state.selectedTabIndex,
                         modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                            .padding(vertical = 12.dp)
+                            .widthIn(max = 700.dp)
+                            .fillMaxWidth(),
+                        containerColor = DesertWhite,
+                        indicator = {
+                            TabRowDefaults.SecondaryIndicator(
+                                modifier = Modifier.tabIndicatorOffset(state.selectedTabIndex),
+                                color = SandYellow
+                            )
+                        }
                     ) {
-                        when (pageIndex) {
-                            0 -> {
-                                if (state.isLoading) {
-                                    CircularProgressIndicator()
-                                } else {
-                                    when {
-                                        state.errorMessage != null -> {
-                                            Text(
-                                                text = state.errorMessage.asString(),
-                                                textAlign = TextAlign.Center,
-                                                style = MaterialTheme.typography.headlineSmall,
-                                                color = MaterialTheme.colorScheme.error
-                                            )
-                                        }
+                        Tab(
+                            selected = state.selectedTabIndex == 0,
+                            onClick = {
+                                onAction(RouteListAction.OnTabSelected(0))
+                            },
+                            modifier = Modifier.weight(1f),
+                            selectedContentColor = SandYellow,
+                            unselectedContentColor = Color.Black.copy(alpha = 0.5f)
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.route_list),
+                                modifier = Modifier
+                                    .padding(vertical = 12.dp)
+                            )
+                        }
+                        Tab(
+                            selected = state.selectedTabIndex == 1,
+                            onClick = {
+                                onAction(RouteListAction.OnTabSelected(1))
+                            },
+                            modifier = Modifier.weight(1f),
+                            selectedContentColor = SandYellow,
+                            unselectedContentColor = Color.Black.copy(alpha = 0.5f)
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.statistics),
+                                modifier = Modifier
+                                    .padding(vertical = 12.dp)
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    ) { pageIndex ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            when (pageIndex) {
+                                0 -> {
+                                    if (state.isLoading) {
+                                        CircularProgressIndicator()
+                                    } else {
+                                        when {
+                                            state.errorMessage != null -> {
+                                                Text(
+                                                    text = state.errorMessage.asString(),
+                                                    textAlign = TextAlign.Center,
+                                                    style = MaterialTheme.typography.headlineSmall,
+                                                    color = MaterialTheme.colorScheme.error
+                                                )
+                                            }
 
-                                        state.searchResults.isEmpty() -> {
-                                            Text(
-                                                text = stringResource(Res.string.no_search_results),
-                                                textAlign = TextAlign.Center,
-                                                style = MaterialTheme.typography.headlineSmall,
-                                                color = MaterialTheme.colorScheme.error
-                                            )
-                                        }
+                                            state.searchResults.isEmpty() -> {
+                                                Text(
+                                                    text = stringResource(Res.string.no_search_results),
+                                                    textAlign = TextAlign.Center,
+                                                    style = MaterialTheme.typography.headlineSmall,
+                                                    color = MaterialTheme.colorScheme.error
+                                                )
+                                            }
 
-                                        else -> {
-                                            RouteList(
-                                                routes = state.searchResults,
-                                                onRouteClick = {
-                                                    onAction(RouteListAction.OnRouteClicked(it))
-                                                },
-                                                modifier = Modifier.fillMaxSize(),
-                                                scrollState = routeListState
-                                            )
+                                            else -> {
+                                                RouteList(
+                                                    routes = state.searchResults,
+                                                    onRouteClick = {
+                                                        onAction(RouteListAction.OnRouteClicked(it))
+                                                    },
+                                                    modifier = Modifier.fillMaxSize(),
+                                                    scrollState = routeListState
+                                                )
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            1 -> {
-                                Text(
-                                    text = stringResource(Res.string.no_search_results),
-                                    textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    color = MaterialTheme.colorScheme.error
-                                )
+                                1 -> {
+                                    Text(
+                                        text = stringResource(Res.string.no_search_results),
+                                        textAlign = TextAlign.Center,
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        color = MaterialTheme.colorScheme.error
+                                    )
+                                }
                             }
                         }
                     }

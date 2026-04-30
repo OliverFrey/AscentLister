@@ -7,4 +7,5 @@ sealed interface RouteListAction {
     data class OnRouteClicked(val route: Route): RouteListAction
     data class OnTabSelected(val index: Int): RouteListAction
     data class OnAddButtonClicked(val index: Int): RouteListAction
+    data object OnSyncClicked: RouteListAction
 }

@@ -19,7 +19,7 @@ class KtorRemoteAscentDataSource (
     ): Result<List<AscentDto>, DataError.Remote> {
         return safeCall<List<AscentDto>> {
             httpClient.get(
-                urlString = "${BASE_URL}/search.json"
+                urlString = "${BASE_URL}/Ascent"
             ) {
                 parameter("q", query)
             }

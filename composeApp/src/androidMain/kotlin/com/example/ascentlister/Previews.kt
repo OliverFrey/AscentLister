@@ -1,6 +1,5 @@
 package com.example.ascentlister
 
-import RouteListScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.ascentlister.location.domain.Location
 import com.example.ascentlister.route.domain.Route
+import com.example.ascentlister.route.presentation.route_list.RouteListScreen
 import com.example.ascentlister.route.presentation.route_list.RouteListState
 import com.example.ascentlister.route.presentation.route_list.components.RouteSearchBar
 

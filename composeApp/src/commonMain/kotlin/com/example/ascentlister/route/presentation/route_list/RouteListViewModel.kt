@@ -33,6 +33,7 @@ class RouteListViewModel(
         .onStart {
             if(cachedRoutes.isEmpty()){
                 observeSearchQuery()
+                observeLocalRoutes()
             }
         }
         .stateIn(
@@ -62,6 +63,37 @@ class RouteListViewModel(
                 is RouteListAction.OnAddButtonClicked -> {
 
                 }
+
+                RouteListAction.OnSyncClicked -> {
+                    syncRoutes()
+                }
+            }
+    }
+
+    private fun observeLocalRoutes() {
+        ascentRepository
+            .getLocalRoutes()
+            .onEach { routes ->
+                cachedRoutes = routes
+                if(_state.value.searchQuery.isBlank()) {
+                    _state.update { it.copy(searchResults = routes) }
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun syncRoutes() = viewModelScope.launch {
+        _state.update { it.copy(isLoading = true) }
+        ascentRepository
+            .syncRoutes(_state.value.searchQuery)
+            .onError { error ->
+                _state.update { it.copy(
+                    errorMessage = error.toUiText(),
+                    isLoading = false
+                ) }
+            }
+            .onSuccess {
+                _state.update { it.copy(isLoading = false) }
             }
     }
 
@@ -96,7 +128,7 @@ class RouteListViewModel(
                 .onSuccess { searchResults ->
                     _state.update { it.copy(
                         errorMessage = null,
-                        searchResults = searchResults,
+                        searchResults = searchResults.map { it.route },
                     ) }
                 }
                 .onError { error ->
