@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import ascentlister.composeapp.generated.resources.Res
 import ascentlister.composeapp.generated.resources.arrow_forward_24px
 import com.example.ascentlister.route.domain.Route
-import com.plcoding.bookpedia.core.presentation.LightBlue
+import com.example.ascentlister.core.presentation.LightBlue
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

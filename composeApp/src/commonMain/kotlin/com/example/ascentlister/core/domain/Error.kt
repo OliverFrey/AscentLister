@@ -1,3 +1,3 @@
-package com.plcoding.bookpedia.core.domain
+package com.example.ascentlister.core.domain
 
 interface Error

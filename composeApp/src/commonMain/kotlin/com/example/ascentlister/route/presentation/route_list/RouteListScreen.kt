@@ -41,9 +41,9 @@ import com.example.ascentlister.route.presentation.route_list.RouteListState
 import com.example.ascentlister.route.presentation.route_list.RouteListViewModel
 import com.example.ascentlister.route.presentation.route_list.components.RouteList
 import com.example.ascentlister.route.presentation.route_list.components.RouteSearchBar
-import com.plcoding.bookpedia.core.presentation.DarkBlue
-import com.plcoding.bookpedia.core.presentation.DesertWhite
-import com.plcoding.bookpedia.core.presentation.SandYellow
+import com.example.ascentlister.core.presentation.DarkBlue
+import com.example.ascentlister.core.presentation.DesertWhite
+import com.example.ascentlister.core.presentation.SandYellow
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel

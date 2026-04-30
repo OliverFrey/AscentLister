@@ -2,7 +2,7 @@ package com.example.ascentlister.route.presentation.route_list
 
 import com.example.ascentlister.location.domain.Location
 import com.example.ascentlister.route.domain.Route
-import com.plcoding.bookpedia.core.presentation.UiText
+import com.example.ascentlister.core.presentation.UiText
 
 data class RouteListState(
     val searchQuery: String = "",

@@ -1,4 +1,4 @@
-package com.plcoding.bookpedia.core.presentation
+package com.example.ascentlister.core.presentation
 
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.StringResource

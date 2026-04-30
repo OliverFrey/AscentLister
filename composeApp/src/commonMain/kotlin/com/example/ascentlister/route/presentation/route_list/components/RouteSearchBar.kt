@@ -24,9 +24,9 @@ import ascentlister.composeapp.generated.resources.close_24px
 import ascentlister.composeapp.generated.resources.close_hint
 import ascentlister.composeapp.generated.resources.search_24px
 import ascentlister.composeapp.generated.resources.search_hint
-import com.plcoding.bookpedia.core.presentation.DarkBlue
-import com.plcoding.bookpedia.core.presentation.DesertWhite
-import com.plcoding.bookpedia.core.presentation.SandYellow
+import com.example.ascentlister.core.presentation.DarkBlue
+import com.example.ascentlister.core.presentation.DesertWhite
+import com.example.ascentlister.core.presentation.SandYellow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
