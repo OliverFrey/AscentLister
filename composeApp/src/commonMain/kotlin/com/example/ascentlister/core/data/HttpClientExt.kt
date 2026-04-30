@@ -17,10 +17,11 @@ suspend inline fun <reified T> safeCall(
         execute()
     } catch (e: SocketTimeoutException) {
         return Result.Error(DataError.Remote.REQUEST_TIMEOUT)
-    }catch (e: UnresolvedAddressException){
+    } catch (e: UnresolvedAddressException){
         return Result.Error(DataError.Remote.NO_INTERNET)
     } catch (e: Exception){
         coroutineContext.ensureActive()
+        e.printStackTrace()
         return Result.Error(DataError.Remote.UNKNOWN)
     }
 
@@ -34,10 +35,12 @@ suspend inline fun <reified T> respondToResult(
         in 200 .. 299 -> {
             try {
                 Result.Success(response.body<T>())
-            } catch (e: NoTransformationFoundException) {
+            } catch (e: Exception) {
+                e.printStackTrace()
                 Result.Error(DataError.Remote.SERIALIZATION)
             }
         }
+        401 -> Result.Error(DataError.Remote.UNAUTHORIZED)
         408 -> Result.Error(DataError.Remote.REQUEST_TIMEOUT)
         429 -> Result.Error(DataError.Remote.TOO_MANY_REQUESTS)
         in 500 .. 599 -> Result.Error(DataError.Remote.SERVER)

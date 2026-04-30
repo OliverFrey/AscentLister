@@ -6,6 +6,7 @@ import ascentlister.composeapp.generated.resources.error_no_internet
 import ascentlister.composeapp.generated.resources.error_request_timeout
 import ascentlister.composeapp.generated.resources.error_serialization
 import ascentlister.composeapp.generated.resources.error_too_many_requests
+import ascentlister.composeapp.generated.resources.error_unauthorized
 import ascentlister.composeapp.generated.resources.error_unknown
 import com.example.ascentlister.core.domain.DataError
 
@@ -19,6 +20,7 @@ fun DataError.toUiText(): UiText {
         DataError.Remote.SERVER -> Res.string.error_unknown
         DataError.Remote.SERIALIZATION -> Res.string.error_serialization
         DataError.Remote.UNKNOWN -> Res.string.error_unknown
+        DataError.Remote.UNAUTHORIZED -> Res.string.error_unauthorized
     }
     return UiText.StringResourceId(stringRes)
 }

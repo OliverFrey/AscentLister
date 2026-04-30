@@ -1,5 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -10,6 +12,25 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.buildKonfig)
+}
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { load(it) }
+    }
+}
+
+buildkonfig {
+    packageName = "com.example.ascentlister"
+    objectName = "BuildKonfig"
+
+    defaultConfigs {
+        buildConfigField(STRING, "KEYCLOAK_AUTH_URL", localProperties.getProperty("KEYCLOAK_AUTH_URL") ?: "")
+        buildConfigField(STRING, "KEYCLOAK_CLIENT_ID", localProperties.getProperty("KEYCLOAK_CLIENT_ID") ?: "")
+        buildConfigField(STRING, "KEYCLOAK_CLIENT_SECRET", localProperties.getProperty("KEYCLOAK_CLIENT_SECRET") ?: "")
+    }
 }
 
 kotlin {

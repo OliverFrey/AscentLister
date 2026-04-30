@@ -8,7 +8,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 
-private const val BASE_URL = "https://192.168.0.90:5164/api"
+private const val BASE_URL = "http://192.168.0.90:5164/api"
 
 class KtorRemoteAscentDataSource (
     private val httpClient: HttpClient
