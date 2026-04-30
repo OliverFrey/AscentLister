@@ -9,4 +9,7 @@ interface AscentRepository {
     suspend fun getAscents(query: String): Result<List<Ascent>, DataError.Remote>
     suspend fun syncRoutes(query: String): Result<Unit, DataError.Remote>
     fun getLocalRoutes(): Flow<List<Route>>
+    suspend fun searchLocalRoutes(query: String): List<Route>
+    suspend fun getRouteByDetails(name: String, grade: String, locName: String, area: String, country: String): Route?
+    suspend fun saveAscent(ascent: Ascent): Result<Unit, DataError.Local>
 }

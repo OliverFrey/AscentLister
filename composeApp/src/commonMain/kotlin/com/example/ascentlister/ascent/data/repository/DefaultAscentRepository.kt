@@ -25,12 +25,32 @@ class DefaultAscentRepository(
         return remoteAscentDataSource
             .getAscents(query)
             .map { dtoList ->
-                val routes = dtoList.map { it.toAscent().route }
+                val ascents = dtoList.map { it.toAscent() }
+                val routes = ascents.map { it.route }
                 ascentDao.upsertRoutes(routes)
+                ascentDao.upsertAscents(ascents)
             }
     }
 
     override fun getLocalRoutes(): Flow<List<Route>> {
         return ascentDao.getRoutes()
+    }
+
+    override suspend fun searchLocalRoutes(query: String): List<Route> {
+        return ascentDao.searchRoutes(query)
+    }
+
+    override suspend fun getRouteByDetails(name: String, grade: String, locName: String, area: String, country: String): Route? {
+        return ascentDao.getRouteByDetails(name, grade, locName, area, country)
+    }
+
+    override suspend fun saveAscent(ascent: Ascent): Result<Unit, DataError.Local> {
+        return try {
+            ascentDao.upsertRoutes(listOf(ascent.route))
+            ascentDao.upsertAscents(listOf(ascent))
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(DataError.Local.UNKNOWN)
+        }
     }
 }

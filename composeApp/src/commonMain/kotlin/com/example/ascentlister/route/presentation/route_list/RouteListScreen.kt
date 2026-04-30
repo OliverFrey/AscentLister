@@ -16,6 +16,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +40,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ascentlister.composeapp.generated.resources.Res
+import ascentlister.composeapp.generated.resources.add_24px
+import ascentlister.composeapp.generated.resources.arrow_back_24px
 import ascentlister.composeapp.generated.resources.no_search_results
 import ascentlister.composeapp.generated.resources.refresh_24px
 import ascentlister.composeapp.generated.resources.route_list
@@ -59,7 +62,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun RouteListScreenRoot(
     viewModel: RouteListViewModel = koinViewModel(),
-    onRouteClicked: (Route) -> Unit
+    onRouteClicked: (Route) -> Unit,
+    onAddClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -68,6 +72,7 @@ fun RouteListScreenRoot(
         onAction = { action ->
             when (action) {
                 is RouteListAction.OnRouteClicked -> onRouteClicked(action.route)
+                RouteListAction.OnAddClick -> onAddClick()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -101,13 +106,12 @@ fun RouteListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Ascent Lister") },
+                title = { Text("") },
                 actions = {
                     IconButton(onClick = { onAction(RouteListAction.OnSyncClicked) }) {
                         Icon(
                             painter = painterResource(Res.drawable.refresh_24px),
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.66f)
+                            contentDescription = ""
                         )
                     }
                 },
@@ -117,6 +121,19 @@ fun RouteListScreen(
                     actionIconContentColor = DesertWhite
                 )
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { onAction(RouteListAction.OnAddClick) },
+                containerColor = DarkBlue,
+                contentColor = SandYellow,
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.add_24px),
+                    contentDescription = "Add Ascent"
+                )
+            }
         }
     ) { padding ->
         Column(

@@ -1,0 +1,134 @@
+package com.example.ascentlister.ascent.presentation.add_ascent
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.ascentlister.ascent.domain.Ascent
+import com.example.ascentlister.ascent.domain.AscentRepository
+import com.example.ascentlister.core.domain.onSuccess
+import com.example.ascentlister.location.domain.Location
+import com.example.ascentlister.route.domain.Route
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlin.random.Random
+
+class AddAscentViewModel(
+    private val ascentRepository: AscentRepository
+) : ViewModel() {
+
+    private val _state = MutableStateFlow(AddAscentState())
+    val state = _state.asStateFlow()
+
+    private var searchJob: Job? = null
+
+    fun onAction(action: AddAscentAction) {
+        when (action) {
+            is AddAscentAction.OnRouteNameChange -> {
+                _state.update { it.copy(routeName = action.name) }
+                searchRoutes(action.name)
+            }
+            is AddAscentAction.OnGradeChange -> {
+                _state.update { it.copy(grade = action.grade) }
+            }
+            is AddAscentAction.OnLocationNameChange -> {
+                _state.update { it.copy(locationName = action.name) }
+            }
+            is AddAscentAction.OnAreaNameChange -> {
+                _state.update { it.copy(areaName = action.name) }
+            }
+            is AddAscentAction.OnCountryChange -> {
+                _state.update { it.copy(country = action.country) }
+            }
+            is AddAscentAction.OnStyleChange -> {
+                _state.update { it.copy(style = action.style) }
+            }
+            is AddAscentAction.OnAttemptsChange -> {
+                _state.update { it.copy(attempts = action.attempts) }
+            }
+            is AddAscentAction.OnCommentsChange -> {
+                _state.update { it.copy(comments = action.comments) }
+            }
+            is AddAscentAction.OnDateChange -> {
+                _state.update { it.copy(date = action.date) }
+            }
+            is AddAscentAction.OnRouteSelected -> {
+                _state.update { it.copy(
+                    routeName = action.route.routeName,
+                    grade = action.route.grade,
+                    locationName = action.route.location.locationName,
+                    areaName = action.route.location.locationAreaName,
+                    country = action.route.location.locationCountry,
+                    routeSuggestions = emptyList()
+                ) }
+            }
+            AddAscentAction.OnSaveClick -> {
+                saveAscent()
+            }
+            AddAscentAction.OnBackClick -> {
+                // Handled in UI
+            }
+        }
+    }
+
+    private fun searchRoutes(query: String) {
+        searchJob?.cancel()
+        if (query.length < 2) {
+            _state.update { it.copy(routeSuggestions = emptyList()) }
+            return
+        }
+        searchJob = viewModelScope.launch {
+            delay(300L)
+            val results = ascentRepository.searchLocalRoutes(query)
+            _state.update { it.copy(routeSuggestions = results) }
+        }
+    }
+
+    private fun saveAscent() {
+        viewModelScope.launch {
+            _state.update { it.copy(isSaving = true) }
+            
+            val currentState = _state.value
+            
+            val existingRoute = ascentRepository.getRouteByDetails(
+                name = currentState.routeName,
+                grade = currentState.grade,
+                locName = currentState.locationName,
+                area = currentState.areaName,
+                country = currentState.country
+            )
+
+            val route = if (existingRoute != null) {
+                existingRoute
+            } else {
+                val location = Location(
+                    locationId = Random.nextInt(),
+                    locationName = currentState.locationName,
+                    locationAreaName = currentState.areaName,
+                    locationCountry = currentState.country
+                )
+                Route(
+                    routeId = Random.nextInt(),
+                    routeName = currentState.routeName,
+                    grade = currentState.grade,
+                    location = location
+                )
+            }
+            
+            val ascent = Ascent(
+                ascentId = Random.nextInt(),
+                route = route,
+                date = currentState.date,
+                style = currentState.style,
+                attempts = currentState.attempts.toIntOrNull() ?: 1,
+                comments = currentState.comments
+            )
+            
+            ascentRepository.saveAscent(ascent).onSuccess {
+                _state.update { it.copy(isSaving = false, isSaved = true) }
+            }
+        }
+    }
+}

@@ -60,11 +60,11 @@ class RouteListViewModel(
                     }
                 }
 
-                is RouteListAction.OnAddButtonClicked -> {
+                is RouteListAction.OnAddClick -> {
 
                 }
 
-                RouteListAction.OnSyncClicked -> {
+                is RouteListAction.OnSyncClicked -> {
                     syncRoutes()
                 }
             }

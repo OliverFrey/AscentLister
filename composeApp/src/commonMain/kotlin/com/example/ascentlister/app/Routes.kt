@@ -12,4 +12,7 @@ sealed interface Routes {
 
     @Serializable
     data class RouteDetails(val it: Int): Routes
+
+    @Serializable
+    data object AddAscent: Routes
 }

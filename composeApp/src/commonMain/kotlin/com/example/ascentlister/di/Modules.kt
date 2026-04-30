@@ -9,7 +9,11 @@ import com.example.ascentlister.core.data.AuthRepository
 import com.example.ascentlister.core.data.HttpClientFactory
 import com.example.ascentlister.ascent.data.local.AscentDao
 import com.example.ascentlister.core.domain.SessionStorage
+import com.example.ascentlister.route.data.repository.DefaultRouteRepository
+import com.example.ascentlister.route.domain.RouteRepository
+import com.example.ascentlister.route.presentation.route_detailpage.RouteDetailViewModel
 import com.example.ascentlister.route.presentation.route_list.RouteListViewModel
+import com.example.ascentlister.ascent.presentation.add_ascent.AddAscentViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -29,8 +33,11 @@ var sharedModule = module {
     
     singleOf(::KtorRemoteAscentDataSource).bind<RemoteAscentDataSource>()
     singleOf(::DefaultAscentRepository).bind<AscentRepository>()
+    singleOf(::DefaultRouteRepository).bind<RouteRepository>()
 
     single { get<AscentDatabase>().ascentDao() }
 
     viewModelOf(::RouteListViewModel)
+    viewModelOf(::RouteDetailViewModel)
+    viewModelOf(::AddAscentViewModel)
 }
