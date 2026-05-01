@@ -42,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ascentlister.composeapp.generated.resources.Res
 import ascentlister.composeapp.generated.resources.add_24px
 import ascentlister.composeapp.generated.resources.arrow_back_24px
+import ascentlister.composeapp.generated.resources.arrow_forward_24px
 import ascentlister.composeapp.generated.resources.no_search_results
 import ascentlister.composeapp.generated.resources.refresh_24px
 import ascentlister.composeapp.generated.resources.route_list
@@ -108,10 +109,16 @@ fun RouteListScreen(
             TopAppBar(
                 title = { Text("") },
                 actions = {
+                    IconButton(onClick = { onAction(RouteListAction.OnUploadClicked) }) {
+                        Icon(
+                            painter = painterResource(Res.drawable.arrow_forward_24px),
+                            contentDescription = "Upload Data"
+                        )
+                    }
                     IconButton(onClick = { onAction(RouteListAction.OnSyncClicked) }) {
                         Icon(
                             painter = painterResource(Res.drawable.refresh_24px),
-                            contentDescription = ""
+                            contentDescription = "Sync Data"
                         )
                     }
                 },

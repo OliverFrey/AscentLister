@@ -8,4 +8,8 @@ interface RemoteAscentDataSource {
     suspend fun getAscents(
         query: String
     ): Result<List<AscentDto>, DataError.Remote>
+
+    suspend fun uploadAscents(
+        ascents: List<AscentDto>
+    ): Result<Unit, DataError.Remote>
 }

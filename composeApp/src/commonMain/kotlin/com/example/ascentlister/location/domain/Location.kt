@@ -9,4 +9,5 @@ data class Location(
     val locationName: String,
     val locationAreaName: String,
     val locationCountry: String,
+    val locationIsSynced: Boolean = false
 )

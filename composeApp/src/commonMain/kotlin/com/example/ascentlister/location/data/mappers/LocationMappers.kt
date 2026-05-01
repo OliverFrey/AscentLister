@@ -9,6 +9,17 @@ fun LocationDto.toLocation(): Location {
         locationId = locationId,
         locationName = locationName,
         locationAreaName = locationAreaName,
-        locationCountry = locationCountry
+        locationCountry = locationCountry,
+        locationIsSynced = true
+    )
+}
+
+fun Location.toLocationDto(): LocationDto {
+    return LocationDto(
+        locationId = locationId,
+        locationName = locationName,
+        locationAreaName = locationAreaName,
+        locationCountry = locationCountry,
+        locationStatus = 1
     )
 }

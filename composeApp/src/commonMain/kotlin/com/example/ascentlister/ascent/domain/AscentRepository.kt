@@ -2,6 +2,7 @@ package com.example.ascentlister.ascent.domain
 
 import com.example.ascentlister.core.domain.DataError
 import com.example.ascentlister.core.domain.Result
+import com.example.ascentlister.location.domain.Location
 import com.example.ascentlister.route.domain.Route
 import kotlinx.coroutines.flow.Flow
 
@@ -11,5 +12,11 @@ interface AscentRepository {
     fun getLocalRoutes(): Flow<List<Route>>
     suspend fun searchLocalRoutes(query: String): List<Route>
     suspend fun getRouteByDetails(name: String, grade: String, locName: String, area: String, country: String): Route?
+    suspend fun getLocationByDetails(name: String, area: String, country: String): Location?
     suspend fun saveAscent(ascent: Ascent): Result<Unit, DataError.Local>
+    suspend fun uploadData(): Result<Unit, DataError.Remote>
+    
+    suspend fun getNextRouteId(): Int
+    suspend fun getNextAscentId(): Int
+    suspend fun getNextLocationId(): Int
 }

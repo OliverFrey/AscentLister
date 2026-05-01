@@ -8,4 +8,5 @@ sealed interface RouteListAction {
     data class OnTabSelected(val index: Int): RouteListAction
     data object OnAddClick: RouteListAction
     data object OnSyncClicked: RouteListAction
+    data object OnUploadClicked: RouteListAction
 }

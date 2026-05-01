@@ -12,5 +12,6 @@ data class Ascent(
     val date: Long, // Room doesn't support GMTDate directly, storing as Long timestamp
     val style: String,
     val attempts: Int,
-    val comments: String
+    val comments: String,
+    val ascentIsSynced: Boolean = false
 )

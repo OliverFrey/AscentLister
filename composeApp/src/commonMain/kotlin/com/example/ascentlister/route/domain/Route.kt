@@ -11,4 +11,5 @@ data class Route(
     val routeName: String,
     val grade: String,
     @Embedded val location: Location,
+    val routeIsSynced: Boolean = false
 )

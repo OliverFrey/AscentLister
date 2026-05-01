@@ -67,6 +67,10 @@ class RouteListViewModel(
                 is RouteListAction.OnSyncClicked -> {
                     syncRoutes()
                 }
+
+                is RouteListAction.OnUploadClicked -> {
+                    uploadData()
+                }
             }
     }
 
@@ -86,6 +90,21 @@ class RouteListViewModel(
         _state.update { it.copy(isLoading = true) }
         ascentRepository
             .syncRoutes(_state.value.searchQuery)
+            .onError { error ->
+                _state.update { it.copy(
+                    errorMessage = error.toUiText(),
+                    isLoading = false
+                ) }
+            }
+            .onSuccess {
+                _state.update { it.copy(isLoading = false) }
+            }
+    }
+
+    private fun uploadData() = viewModelScope.launch {
+        _state.update { it.copy(isLoading = true) }
+        ascentRepository
+            .uploadData()
             .onError { error ->
                 _state.update { it.copy(
                     errorMessage = error.toUiText(),
