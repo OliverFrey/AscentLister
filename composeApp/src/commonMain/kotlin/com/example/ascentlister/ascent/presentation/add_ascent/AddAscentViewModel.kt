@@ -27,20 +27,20 @@ class AddAscentViewModel(
     fun onAction(action: AddAscentAction) {
         when (action) {
             is AddAscentAction.OnRouteNameChange -> {
-                _state.update { it.copy(routeName = action.name) }
+                _state.update { it.copy(routeName = action.name, selectedRoute = null) }
                 searchRoutes(action.name)
             }
             is AddAscentAction.OnGradeChange -> {
-                _state.update { it.copy(grade = action.grade) }
+                _state.update { it.copy(grade = action.grade, selectedRoute = null) }
             }
             is AddAscentAction.OnLocationNameChange -> {
-                _state.update { it.copy(locationName = action.name) }
+                _state.update { it.copy(locationName = action.name, selectedRoute = null) }
             }
             is AddAscentAction.OnAreaNameChange -> {
-                _state.update { it.copy(areaName = action.name) }
+                _state.update { it.copy(areaName = action.name, selectedRoute = null) }
             }
             is AddAscentAction.OnCountryChange -> {
-                _state.update { it.copy(country = action.country) }
+                _state.update { it.copy(country = action.country, selectedRoute = null) }
             }
             is AddAscentAction.OnStyleChange -> {
                 _state.update { it.copy(style = action.style) }
@@ -61,6 +61,7 @@ class AddAscentViewModel(
                     locationName = action.route.location.locationName,
                     areaName = action.route.location.locationAreaName,
                     country = action.route.location.locationCountry,
+                    selectedRoute = action.route,
                     routeSuggestions = emptyList()
                 ) }
             }
@@ -92,29 +93,34 @@ class AddAscentViewModel(
             
             val currentState = _state.value
             
-            val existingRoute = ascentRepository.getRouteByDetails(
-                name = currentState.routeName,
-                grade = currentState.grade,
-                locName = currentState.locationName,
-                area = currentState.areaName,
-                country = currentState.country
-            )
-
-            val route = if (existingRoute != null) {
-                existingRoute
+            val route = if (currentState.selectedRoute != null) {
+                currentState.selectedRoute
             } else {
-                val location = Location(
-                    locationId = Random.nextInt(),
-                    locationName = currentState.locationName,
-                    locationAreaName = currentState.areaName,
-                    locationCountry = currentState.country
-                )
-                Route(
-                    routeId = Random.nextInt(),
-                    routeName = currentState.routeName,
+                // Double check if a route with these details already exists even if not explicitly "selected" from suggestions
+                val existingRoute = ascentRepository.getRouteByDetails(
+                    name = currentState.routeName,
                     grade = currentState.grade,
-                    location = location
+                    locName = currentState.locationName,
+                    area = currentState.areaName,
+                    country = currentState.country
                 )
+                
+                if (existingRoute != null) {
+                    existingRoute
+                } else {
+                    val location = Location(
+                        locationId = Random.nextInt(),
+                        locationName = currentState.locationName,
+                        locationAreaName = currentState.areaName,
+                        locationCountry = currentState.country
+                    )
+                    Route(
+                        routeId = Random.nextInt(),
+                        routeName = currentState.routeName,
+                        grade = currentState.grade,
+                        location = location
+                    )
+                }
             }
             
             val ascent = Ascent(

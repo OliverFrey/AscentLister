@@ -14,6 +14,7 @@ data class AddAscentState(
     val attempts: String = "1",
     val comments: String = "",
     val date: Long = Clock.System.now().toEpochMilliseconds(),
+    val selectedRoute: Route? = null,
 
     val isLoading: Boolean = false,
     val errorMessage: UiText? = null,
