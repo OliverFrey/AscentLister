@@ -10,5 +10,6 @@ data class AscentDto (
     val date: String,
     val style: String,
     val attempts: Int,
-    val comments: String
+    val comments: String,
+    val status: Int
 )

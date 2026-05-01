@@ -21,6 +21,7 @@ actual val platformModule: Module
                 context = androidContext(),
                 name = dbFile.absolutePath
             )
+                .addMigrations(AscentDatabase.MIGRATION_1_2)
                 .setJournalMode(RoomDatabase.JournalMode.WRITE_AHEAD_LOGGING)
                 .build()
         }

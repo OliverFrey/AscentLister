@@ -8,5 +8,6 @@ data class RouteDto (
     val routeId: Int,
     val routeName: String,
     val grade: String,
+    val routeStatus: Int,
     val location: LocationDto?
 )

@@ -7,5 +7,6 @@ data class LocationDto(
     val locationId: Int,
     val locationName: String,
     val locationAreaName: String,
-    val locationCountry: String
+    val locationCountry: String,
+    val locationStatus: Int
 )

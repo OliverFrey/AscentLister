@@ -30,6 +30,7 @@ buildkonfig {
         buildConfigField(STRING, "KEYCLOAK_AUTH_URL", localProperties.getProperty("KEYCLOAK_AUTH_URL") ?: "")
         buildConfigField(STRING, "KEYCLOAK_CLIENT_ID", localProperties.getProperty("KEYCLOAK_CLIENT_ID") ?: "")
         buildConfigField(STRING, "KEYCLOAK_CLIENT_SECRET", localProperties.getProperty("KEYCLOAK_CLIENT_SECRET") ?: "")
+        buildConfigField(STRING, "BASE_URL", localProperties.getProperty("BASE_URL") ?: "")
     }
 }
 

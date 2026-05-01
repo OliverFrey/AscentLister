@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class AddAscentViewModel(
     private val ascentRepository: AscentRepository
@@ -66,7 +65,9 @@ class AddAscentViewModel(
                 ) }
             }
             AddAscentAction.OnSaveClick -> {
-                saveAscent()
+                if (!_state.value.isSaving) {
+                    saveAscent()
+                }
             }
             AddAscentAction.OnBackClick -> {
                 // Handled in UI
@@ -108,14 +109,21 @@ class AddAscentViewModel(
                 if (existingRoute != null) {
                     existingRoute
                 } else {
-                    val location = Location(
-                        locationId = Random.nextInt(),
+                    // Double check if a location with these details already exists
+                    val existingLocation = ascentRepository.getLocationByDetails(
+                        name = currentState.locationName,
+                        area = currentState.areaName,
+                        country = currentState.country
+                    )
+                    
+                    val location = existingLocation ?: Location(
+                        locationId = ascentRepository.getNextLocationId(),
                         locationName = currentState.locationName,
                         locationAreaName = currentState.areaName,
                         locationCountry = currentState.country
                     )
                     Route(
-                        routeId = Random.nextInt(),
+                        routeId = ascentRepository.getNextRouteId(),
                         routeName = currentState.routeName,
                         grade = currentState.grade,
                         location = location
@@ -124,7 +132,7 @@ class AddAscentViewModel(
             }
             
             val ascent = Ascent(
-                ascentId = Random.nextInt(),
+                ascentId = ascentRepository.getNextAscentId(),
                 route = route,
                 date = currentState.date,
                 style = currentState.style,
