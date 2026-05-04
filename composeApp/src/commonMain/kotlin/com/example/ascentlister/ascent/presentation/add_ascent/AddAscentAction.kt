@@ -1,5 +1,6 @@
 package com.example.ascentlister.ascent.presentation.add_ascent
 
+import com.example.ascentlister.location.domain.Location
 import com.example.ascentlister.route.domain.Route
 
 sealed interface AddAscentAction {
@@ -13,6 +14,7 @@ sealed interface AddAscentAction {
     data class OnCommentsChange(val comments: String): AddAscentAction
     data class OnDateChange(val date: Long): AddAscentAction
     data class OnRouteSelected(val route: Route): AddAscentAction
+    data class OnLocationSelected(val location: Location): AddAscentAction
     data object OnSaveClick: AddAscentAction
     data object OnBackClick: AddAscentAction
 }

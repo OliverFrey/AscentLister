@@ -22,6 +22,7 @@ class AddAscentViewModel(
     val state = _state.asStateFlow()
 
     private var searchJob: Job? = null
+    private var locationSearchJob: Job? = null
 
     fun onAction(action: AddAscentAction) {
         when (action) {
@@ -33,13 +34,26 @@ class AddAscentViewModel(
                 _state.update { it.copy(grade = action.grade, selectedRoute = null) }
             }
             is AddAscentAction.OnLocationNameChange -> {
-                _state.update { it.copy(locationName = action.name, selectedRoute = null) }
+                _state.update { it.copy(
+                    locationName = action.name,
+                    selectedRoute = null,
+                    selectedLocation = null
+                ) }
+                searchLocations(action.name)
             }
             is AddAscentAction.OnAreaNameChange -> {
-                _state.update { it.copy(areaName = action.name, selectedRoute = null) }
+                _state.update { it.copy(
+                    areaName = action.name,
+                    selectedRoute = null,
+                    selectedLocation = null
+                ) }
             }
             is AddAscentAction.OnCountryChange -> {
-                _state.update { it.copy(country = action.country, selectedRoute = null) }
+                _state.update { it.copy(
+                    country = action.country,
+                    selectedRoute = null,
+                    selectedLocation = null
+                ) }
             }
             is AddAscentAction.OnStyleChange -> {
                 _state.update { it.copy(style = action.style) }
@@ -61,7 +75,19 @@ class AddAscentViewModel(
                     areaName = action.route.location.locationAreaName,
                     country = action.route.location.locationCountry,
                     selectedRoute = action.route,
-                    routeSuggestions = emptyList()
+                    selectedLocation = action.route.location,
+                    routeSuggestions = emptyList(),
+                    locationSuggestions = emptyList()
+                ) }
+            }
+            is AddAscentAction.OnLocationSelected -> {
+                _state.update { it.copy(
+                    locationName = action.location.locationName,
+                    areaName = action.location.locationAreaName,
+                    country = action.location.locationCountry,
+                    selectedLocation = action.location,
+                    selectedRoute = null,
+                    locationSuggestions = emptyList()
                 ) }
             }
             AddAscentAction.OnSaveClick -> {
@@ -88,6 +114,19 @@ class AddAscentViewModel(
         }
     }
 
+    private fun searchLocations(query: String) {
+        locationSearchJob?.cancel()
+        if (query.length < 2) {
+            _state.update { it.copy(locationSuggestions = emptyList()) }
+            return
+        }
+        locationSearchJob = viewModelScope.launch {
+            delay(300L)
+            val results = ascentRepository.searchLocalLocations(query)
+            _state.update { it.copy(locationSuggestions = results) }
+        }
+    }
+
     private fun saveAscent() {
         viewModelScope.launch {
             _state.update { it.copy(isSaving = true) }
@@ -109,19 +148,18 @@ class AddAscentViewModel(
                 if (existingRoute != null) {
                     existingRoute
                 } else {
-                    // Double check if a location with these details already exists
-                    val existingLocation = ascentRepository.getLocationByDetails(
-                        name = currentState.locationName,
-                        area = currentState.areaName,
-                        country = currentState.country
-                    )
-                    
-                    val location = existingLocation ?: Location(
-                        locationId = ascentRepository.getNextLocationId(),
-                        locationName = currentState.locationName,
-                        locationAreaName = currentState.areaName,
-                        locationCountry = currentState.country
-                    )
+                    val location = currentState.selectedLocation
+                        ?: ascentRepository.getLocationByDetails(
+                            name = currentState.locationName,
+                            area = currentState.areaName,
+                            country = currentState.country
+                        )
+                        ?: Location(
+                            locationId = ascentRepository.getNextLocationId(),
+                            locationName = currentState.locationName,
+                            locationAreaName = currentState.areaName,
+                            locationCountry = currentState.country
+                        )
                     Route(
                         routeId = ascentRepository.getNextRouteId(),
                         routeName = currentState.routeName,

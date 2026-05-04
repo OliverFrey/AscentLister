@@ -165,12 +165,35 @@ fun AddAscentScreen(
 
                     HorizontalDivider()
 
-                    OutlinedTextField(
-                        value = state.locationName,
-                        onValueChange = { onAction(AddAscentAction.OnLocationNameChange(it)) },
-                        label = { Text("Location Name") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    Box {
+                        OutlinedTextField(
+                            value = state.locationName,
+                            onValueChange = { onAction(AddAscentAction.OnLocationNameChange(it)) },
+                            label = { Text("Location Name") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        if (state.locationSuggestions.isNotEmpty()) {
+                            Popup(alignment = Alignment.BottomStart) {
+                                Surface(
+                                    modifier = Modifier.fillMaxWidth(0.9f),
+                                    shadowElevation = 4.dp,
+                                    shape = RoundedCornerShape(8.dp)
+                                ) {
+                                    Column {
+                                        state.locationSuggestions.forEach { location ->
+                                            ListItem(
+                                                headlineContent = { Text(location.locationName) },
+                                                supportingContent = { Text("${location.locationAreaName}, ${location.locationCountry}") },
+                                                modifier = Modifier.clickable {
+                                                    onAction(AddAscentAction.OnLocationSelected(location))
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     OutlinedTextField(
                         value = state.areaName,

@@ -46,6 +46,10 @@ class DefaultAscentRepository(
         return ascentDao.searchRoutes(query)
     }
 
+    override suspend fun searchLocalLocations(query: String): List<Location> {
+        return ascentDao.searchLocations(query)
+    }
+
     override suspend fun getRouteByDetails(name: String, grade: String, locName: String, area: String, country: String): Route? {
         return ascentDao.getRouteByDetails(name, grade, locName, area, country)
     }
