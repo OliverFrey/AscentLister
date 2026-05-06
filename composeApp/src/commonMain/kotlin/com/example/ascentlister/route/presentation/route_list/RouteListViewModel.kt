@@ -138,23 +138,12 @@ class RouteListViewModel(
     }
 
     private fun searchRoutes(query: String) = viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            val results = ascentRepository.searchLocalRoutes(query)
             _state.update { it.copy(
-                isLoading = true
+                errorMessage = null,
+                searchResults = results,
+                isLoading = false
             ) }
-
-            ascentRepository
-                .getAscents(query)
-                .onSuccess { searchResults ->
-                    _state.update { it.copy(
-                        errorMessage = null,
-                        searchResults = searchResults.map { it.route },
-                    ) }
-                }
-                .onError { error ->
-                    _state.update { it.copy(
-                        searchResults = emptyList(),
-                        errorMessage = error.toUiText()
-                    ) }
-                }
         }
 }

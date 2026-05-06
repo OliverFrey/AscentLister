@@ -18,7 +18,7 @@ interface AscentDao {
     @Upsert
     suspend fun upsertLocations(locations: List<Location>)
 
-    @Query("SELECT * FROM Route")
+    @Query("SELECT * FROM Route ORDER BY routeName")
     fun getRoutes(): Flow<List<Route>>
 
     @Query("SELECT * FROM Route WHERE routeId = :routeId")

@@ -43,11 +43,13 @@ import ascentlister.composeapp.generated.resources.Res
 import ascentlister.composeapp.generated.resources.add_24px
 import ascentlister.composeapp.generated.resources.arrow_back_24px
 import ascentlister.composeapp.generated.resources.arrow_forward_24px
+import ascentlister.composeapp.generated.resources.download_24px
 import ascentlister.composeapp.generated.resources.no_search_results
 import ascentlister.composeapp.generated.resources.refresh_24px
 import ascentlister.composeapp.generated.resources.route_list
 import ascentlister.composeapp.generated.resources.search_24px
 import ascentlister.composeapp.generated.resources.statistics
+import ascentlister.composeapp.generated.resources.upload_24px
 import com.example.ascentlister.location.domain.Location
 import com.example.ascentlister.route.domain.Route
 import com.example.ascentlister.route.presentation.route_list.components.RouteList
@@ -111,13 +113,13 @@ fun RouteListScreen(
                 actions = {
                     IconButton(onClick = { onAction(RouteListAction.OnUploadClicked) }) {
                         Icon(
-                            painter = painterResource(Res.drawable.arrow_forward_24px),
+                            painter = painterResource(Res.drawable.upload_24px),
                             contentDescription = "Upload Data"
                         )
                     }
                     IconButton(onClick = { onAction(RouteListAction.OnSyncClicked) }) {
                         Icon(
-                            painter = painterResource(Res.drawable.refresh_24px),
+                            painter = painterResource(Res.drawable.download_24px),
                             contentDescription = "Sync Data"
                         )
                     }
