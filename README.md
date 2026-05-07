@@ -10,9 +10,14 @@ https://github.com/OliverFrey/AscentListerAPI
 ### How to use it
 1. Set up the AscentListerAPI. For instructions see the readme in the repository
 2. Pull the source code and add a local.properties with the following values:
+   
    properties
+   
    KEYCLOAK_AUTH_URL=<your-auth-url>
+
    KEYCLOAK_CLIENT_ID=<your-api-client-id>
+   
    KEYCLOAK_CLIENT_SECRET=<your-api-client-secret>
+   
    BASE_URL=<your-ipa-url>
-3. Run the app on your local device
+4. Run the app on your local device
