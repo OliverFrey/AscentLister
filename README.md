@@ -1,48 +1,23 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Desktop (JVM).
+### Overview
+This repository is part of the AscentLister Project and contains the mobile app. The goal for this project was to create an mobile app where I can log my climbing route ascents.
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+The project contains the following repos:
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+https://github.com/OliverFrey/AscentLister
 
-### Build and Run Android Application
+https://github.com/OliverFrey/AscentListerAPI
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
+### How to use it
+1. Set up the AscentListerAPI. For instructions see the readme in the repository
+2. Pull the source code and add the following values to the "local-properties"-file:
+   
+   properties
+   
+   KEYCLOAK_AUTH_URL="your-auth-url"
 
-### Build and Run Desktop (JVM) Application
-
-To build and run the development version of the desktop app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:run
-  ```
-
-### Build and Run iOS Application
-
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
-
----
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+   KEYCLOAK_CLIENT_ID="your-api-client-id"
+   
+   KEYCLOAK_CLIENT_SECRET="your-api-client-secret"
+   
+   BASE_URL="your-ipa-url"
+4. Run the app on your local device
