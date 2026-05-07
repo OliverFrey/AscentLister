@@ -9,7 +9,7 @@ https://github.com/OliverFrey/AscentListerAPI
 
 ### How to use it
 1. Set up the AscentListerAPI. For instructions see the readme in the repository
-2. Pull the source code and add a local.properties with the following values:
+2. Pull the source code and add the following values to the "local-properties"-file:
    
    properties
    
