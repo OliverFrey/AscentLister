@@ -13,11 +13,11 @@ https://github.com/OliverFrey/AscentListerAPI
    
    properties
    
-   KEYCLOAK_AUTH_URL=<your-auth-url>
+   KEYCLOAK_AUTH_URL="your-auth-url"
 
-   KEYCLOAK_CLIENT_ID=<your-api-client-id>
+   KEYCLOAK_CLIENT_ID="your-api-client-id"
    
-   KEYCLOAK_CLIENT_SECRET=<your-api-client-secret>
+   KEYCLOAK_CLIENT_SECRET="your-api-client-secret"
    
-   BASE_URL=<your-ipa-url>
+   BASE_URL="your-ipa-url"
 4. Run the app on your local device
