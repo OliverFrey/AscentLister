@@ -3,6 +3,7 @@ package com.example.ascentlister.route.presentation.route_list
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,6 +45,7 @@ import ascentlister.composeapp.generated.resources.add_24px
 import ascentlister.composeapp.generated.resources.arrow_back_24px
 import ascentlister.composeapp.generated.resources.arrow_forward_24px
 import ascentlister.composeapp.generated.resources.download_24px
+import ascentlister.composeapp.generated.resources.filter_24px
 import ascentlister.composeapp.generated.resources.no_search_results
 import ascentlister.composeapp.generated.resources.refresh_24px
 import ascentlister.composeapp.generated.resources.route_list
@@ -152,19 +154,32 @@ fun RouteListScreen(
                 .padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            RouteSearchBar(
-                searchQuery = state.searchQuery,
-                onSearchQueryChange = {
-                    onAction(RouteListAction.OnSearchQueryChange(it))
-                },
-                onImeSearch = {
-                    keyboardController?.hide()
-                },
-                modifier = Modifier
-                    .widthIn(max = 400.dp)
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            )
+            Row(
+                modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RouteSearchBar(
+                    searchQuery = state.searchQuery,
+                    onSearchQueryChange = {
+                        onAction(RouteListAction.OnSearchQueryChange(it))
+                    },
+                    onImeSearch = {
+                        keyboardController?.hide()
+                    },
+                    modifier = Modifier
+                        .widthIn(max = 400.dp)
+                        .padding(16.dp)
+                )
+                IconButton(
+                    onClick = { /* TODO */ },
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.filter_24px),
+                        contentDescription = "Filter",
+                        tint = DesertWhite
+                    )
+                }
+            }
             Surface(
                 modifier = Modifier
                     .weight(1f)

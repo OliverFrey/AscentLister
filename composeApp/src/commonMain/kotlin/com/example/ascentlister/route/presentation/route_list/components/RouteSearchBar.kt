@@ -2,6 +2,7 @@ package com.example.ascentlister.route.presentation.route_list.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,10 +17,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import ascentlister.composeapp.generated.resources.Res
+import ascentlister.composeapp.generated.resources.add_24px
 import ascentlister.composeapp.generated.resources.close_24px
 import ascentlister.composeapp.generated.resources.close_hint
 import ascentlister.composeapp.generated.resources.search_24px
@@ -44,58 +47,59 @@ fun RouteSearchBar(
         )
     ) {
         OutlinedTextField(
-            value = searchQuery,
-            onValueChange = onSearchQueryChange,
-            shape = RoundedCornerShape(100),
-            colors = OutlinedTextFieldDefaults.colors(
-                cursorColor = DarkBlue,
-                focusedBorderColor = SandYellow
-            ),
-            placeholder = {
-                Text(
-                    text = stringResource(Res.string.search_hint)
-                )
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(Res.drawable.search_24px),
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.66f)
-                )
-            },
-            singleLine = true,
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    onImeSearch()
-                }
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Search
-            ),
-            trailingIcon = {
-                AnimatedVisibility(
-                    visible = searchQuery.isNotBlank()
-                ) {
-                    IconButton(
-                        onClick = {
-                            onSearchQueryChange("")
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.close_24px),
-                            contentDescription = stringResource(Res.string.close_hint),
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
+                value = searchQuery,
+                onValueChange = onSearchQueryChange,
+                shape = RoundedCornerShape(100),
+                colors = OutlinedTextFieldDefaults.colors(
+                    cursorColor = DarkBlue,
+                    focusedBorderColor = SandYellow
+                ),
+                placeholder = {
+                    Text(
+                        text = stringResource(Res.string.search_hint)
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(Res.drawable.search_24px),
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.66f)
+                    )
+                },
+                singleLine = true,
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        onImeSearch()
                     }
-                }
-            },
-            modifier = modifier
-                .background(
-                    shape = RoundedCornerShape(100),
-                    color = DesertWhite
-                )
-                .minimumInteractiveComponentSize()
-        )
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Search
+                ),
+                trailingIcon = {
+                    AnimatedVisibility(
+                        visible = searchQuery.isNotBlank()
+                    ) {
+                        IconButton(
+                            onClick = {
+                                onSearchQueryChange("")
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.close_24px),
+                                contentDescription = stringResource(Res.string.close_hint),
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+                },
+                modifier = modifier
+                    .background(
+                        shape = RoundedCornerShape(100),
+                        color = DesertWhite
+                    )
+                    .minimumInteractiveComponentSize()
+            )
+
     }
 }

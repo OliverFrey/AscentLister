@@ -9,4 +9,5 @@ sealed interface RouteListAction {
     data object OnAddClick: RouteListAction
     data object OnSyncClicked: RouteListAction
     data object OnUploadClicked: RouteListAction
+    data object OnFilterClicked: RouteListAction
 }
