@@ -2,15 +2,14 @@ package com.example.ascentlister.route.presentation.route_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ascentlister.ascent.domain.AscentRepository
 import com.example.ascentlister.core.domain.onError
 import com.example.ascentlister.core.domain.onSuccess
 import com.example.ascentlister.core.presentation.toUiText
 import com.example.ascentlister.route.domain.Route
+import com.example.ascentlister.route.domain.RouteRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -22,7 +21,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RouteListViewModel(
-    private val ascentRepository: AscentRepository
+    private val routeRepository: RouteRepository
 ): ViewModel() {
 
     private var cachedRoutes = emptyList<Route>()
@@ -71,11 +70,13 @@ class RouteListViewModel(
                 is RouteListAction.OnUploadClicked -> {
                     uploadData()
                 }
+
+                RouteListAction.OnFilterClicked -> TODO()
             }
     }
 
     private fun observeLocalRoutes() {
-        ascentRepository
+        routeRepository
             .getLocalRoutes()
             .onEach { routes ->
                 cachedRoutes = routes
@@ -88,7 +89,7 @@ class RouteListViewModel(
 
     private fun syncRoutes() = viewModelScope.launch {
         _state.update { it.copy(isLoading = true) }
-        ascentRepository
+        routeRepository
             .syncRoutes(_state.value.searchQuery)
             .onError { error ->
                 _state.update { it.copy(
@@ -103,7 +104,7 @@ class RouteListViewModel(
 
     private fun uploadData() = viewModelScope.launch {
         _state.update { it.copy(isLoading = true) }
-        ascentRepository
+        routeRepository
             .uploadData()
             .onError { error ->
                 _state.update { it.copy(
@@ -139,7 +140,7 @@ class RouteListViewModel(
 
     private fun searchRoutes(query: String) = viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            val results = ascentRepository.searchLocalRoutes(query)
+            val results = routeRepository.searchLocalRoutes(query)
             _state.update { it.copy(
                 errorMessage = null,
                 searchResults = results,

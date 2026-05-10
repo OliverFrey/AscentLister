@@ -7,6 +7,7 @@ import com.example.ascentlister.ascent.domain.AscentRepository
 import com.example.ascentlister.core.domain.onSuccess
 import com.example.ascentlister.location.domain.Location
 import com.example.ascentlister.route.domain.Route
+import com.example.ascentlister.route.domain.RouteRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AddAscentViewModel(
-    private val ascentRepository: AscentRepository
+    private val ascentRepository: AscentRepository,
+    private val routeRepository: RouteRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AddAscentState())
@@ -109,7 +111,7 @@ class AddAscentViewModel(
         }
         searchJob = viewModelScope.launch {
             delay(300L)
-            val results = ascentRepository.searchLocalRoutes(query)
+            val results = routeRepository.searchLocalRoutes(query)
             _state.update { it.copy(routeSuggestions = results) }
         }
     }

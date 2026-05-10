@@ -8,14 +8,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface AscentRepository {
     suspend fun getAscents(query: String): Result<List<Ascent>, DataError.Remote>
-    suspend fun syncRoutes(query: String): Result<Unit, DataError.Remote>
-    fun getLocalRoutes(): Flow<List<Route>>
-    suspend fun searchLocalRoutes(query: String): List<Route>
     suspend fun searchLocalLocations(query: String): List<Location>
     suspend fun getRouteByDetails(name: String, grade: String, locName: String, area: String, country: String): Route?
     suspend fun getLocationByDetails(name: String, area: String, country: String): Location?
     suspend fun saveAscent(ascent: Ascent): Result<Unit, DataError.Local>
-    suspend fun uploadData(): Result<Unit, DataError.Remote>
     
     suspend fun getNextRouteId(): Int
     suspend fun getNextAscentId(): Int
