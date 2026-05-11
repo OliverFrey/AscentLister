@@ -7,6 +7,7 @@ import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
 import com.example.ascentlister.ascent.domain.Ascent
 import com.example.ascentlister.location.domain.Location
+import com.example.ascentlister.route.data.local.RouteDao
 import com.example.ascentlister.route.domain.Route
 
 @Database(
@@ -15,6 +16,7 @@ import com.example.ascentlister.route.domain.Route
 )
 abstract class AscentDatabase : RoomDatabase() {
     abstract fun ascentDao(): AscentDao
+    abstract fun routeDao(): RouteDao
 
     companion object {
         const val DB_NAME = "ascent.db"

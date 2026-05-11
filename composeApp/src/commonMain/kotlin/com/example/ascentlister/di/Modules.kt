@@ -36,6 +36,7 @@ var sharedModule = module {
     singleOf(::DefaultRouteRepository).bind<RouteRepository>()
 
     single { get<AscentDatabase>().ascentDao() }
+    single { get<AscentDatabase>().routeDao() }
 
     viewModelOf(::RouteListViewModel)
     viewModelOf(::RouteDetailViewModel)
