@@ -1,8 +1,8 @@
 ### Overview
 This repository is part of the AscentLister Project and contains the mobile app. The goal for this project was to create an mobile app where I and you can log the climbing route ascents. The project is designed and set up as a local system, where everyone runs a database, api and app on its own. Therefor, there is no user integration, clientid and secret are used for connection and authentication. 
 
-<img src="AscentListPage.jpeg" alt="Ascent List Page" width="500" height="auto">
-<img src="AscentDetailPage.jpeg" alt="Ascent Detail Page" width="500" height="auto">
+<img src="AscentListPage.jpeg" alt="Ascent List Page" width="250" height="auto">
+<img src="AscentDetailPage.jpeg" alt="Ascent Detail Page" width="250" height="auto">
 
 The project contains the following repos:
 
