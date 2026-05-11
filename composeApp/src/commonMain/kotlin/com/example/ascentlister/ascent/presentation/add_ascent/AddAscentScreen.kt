@@ -268,7 +268,7 @@ fun AddAscentScreen(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
-                            listOf("o", "f", "rp").forEach { style ->
+                            listOf("Onsight", "Flash", "Redpoint", "Project").forEach { style ->
                                 DropdownMenuItem(
                                     text = { Text(style) },
                                     onClick = {
